@@ -71,14 +71,31 @@
                 apiStatus.innerHTML = '<span>Testing API...</span>';
                 
                 fetch(`https://api.heylika.com/api/profile/${user.id}`)
-                    .then(response => response.json())
+                    .then(response => {
+                        apiStatus.innerHTML = `<span class="success">✓ Response received (status: ${response.status})</span>`;
+                        return response.json();
+                    })
                     .then(data => {
                         apiStatus.innerHTML = '<span class="success">✓ API connected</span>';
                         apiResponse.textContent = JSON.stringify(data, null, 2);
                     })
                     .catch(error => {
-                        apiStatus.innerHTML = `<span class="error">✗ API error: ${error.message}</span>`;
-                        apiResponse.textContent = error.stack;
+                        apiStatus.innerHTML = `<span class="error">✗ API error: ${error.message}</span><br>` +
+                            `Type: ${error.name}<br>` +
+                            `Full error: ${error.toString()}`;
+                        apiResponse.textContent = error.stack || 'No stack trace';
+                        
+                        // Try alternative fetch
+                        apiStatus.innerHTML += '<br><br>Trying alternative URL...';
+                        fetch(`http://51.254.131.20:8000/api/profile/${user.id}`)
+                            .then(r => r.json())
+                            .then(d => {
+                                apiStatus.innerHTML += '<br><span class="success">✓ HTTP IP works!</span>';
+                                apiResponse.textContent = JSON.stringify(d, null, 2);
+                            })
+                            .catch(e => {
+                                apiStatus.innerHTML += `<br><span class="error">✗ HTTP IP also failed: ${e.message}</span>`;
+                            });
                     });
             } else {
                 userData.innerHTML = '<span class="error">✗ No user data from Telegram</span><br>' +
