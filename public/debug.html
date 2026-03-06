@@ -70,7 +70,7 @@
                 
                 apiStatus.innerHTML = '<span>Testing API...</span>';
                 
-                fetch(`https://api.heylika.com/api/profile/${user.id}`)
+                fetch(`/api/api/profile/${user.id}`)
                     .then(response => {
                         apiStatus.innerHTML = `<span class="success">✓ Response received (status: ${response.status})</span>`;
                         return response.json();
@@ -87,14 +87,14 @@
                         
                         // Try alternative fetch
                         apiStatus.innerHTML += '<br><br>Trying alternative URL...';
-                        fetch(`http://51.254.131.20:8000/api/profile/${user.id}`)
+                        fetch(`https://api.heylika.com/api/profile/${user.id}`)
                             .then(r => r.json())
                             .then(d => {
-                                apiStatus.innerHTML += '<br><span class="success">✓ HTTP IP works!</span>';
+                                apiStatus.innerHTML += '<br><span class="success">✓ Direct HTTPS works!</span>';
                                 apiResponse.textContent = JSON.stringify(d, null, 2);
                             })
                             .catch(e => {
-                                apiStatus.innerHTML += `<br><span class="error">✗ HTTP IP also failed: ${e.message}</span>`;
+                                apiStatus.innerHTML += `<br><span class="error">✗ Direct HTTPS also failed: ${e.message}</span>`;
                             });
                     });
             } else {
