@@ -1,7 +1,11 @@
 {
   "rewrites": [
     {
-      "source": "/((?!api).*)",
+      "source": "/api/:path*",
+      "destination": "https://api.heylika.com/:path*"
+    },
+    {
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
