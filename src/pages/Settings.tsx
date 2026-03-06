@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Heart,
@@ -12,6 +13,7 @@ import {
 import { apiClient } from '../api/client';
 import { useStore } from '../stores/useStore';
 import { useTelegramWebApp } from '../hooks/useTelegramWebApp';
+import { SettingsPicker } from '../components/SettingsPicker';
 import type { Settings as SettingsType } from '../types';
 
 export function Settings() {
@@ -20,6 +22,8 @@ export function Settings() {
   const settings = useStore((state) => state.settings);
   const { hapticFeedback } = useTelegramWebApp();
   const queryClient = useQueryClient();
+
+  const [pickerType, setPickerType] = useState<'goal' | 'style' | null>(null);
 
   const lang = settings?.language || 'en';
 
@@ -93,7 +97,7 @@ export function Settings() {
       value: goalLabels[settingsData.relationship_goal],
       onClick: () => {
         hapticFeedback('light');
-        alert(lang === 'ru' ? 'Используй команду /settings в боте для изменения' : 'Use /settings command in bot to change');
+        setPickerType('goal');
       },
     },
     {
@@ -103,7 +107,7 @@ export function Settings() {
       value: styleLabels[settingsData.companion_style],
       onClick: () => {
         hapticFeedback('light');
-        alert(lang === 'ru' ? 'Используй команду /settings в боте для изменения' : 'Use /settings command in bot to change');
+        setPickerType('style');
       },
     },
     {
@@ -189,6 +193,42 @@ export function Settings() {
         <br />
         Made with 💛 by @heylika_bot
       </div>
+
+      {/* Pickers */}
+      {pickerType === 'goal' && (
+        <SettingsPicker
+          title={lang === 'ru' ? 'Чего ты ищешь' : 'What You Are Looking For'}
+          options={[
+            { value: 'romantic', label: goalLabels.romantic, description: lang === 'ru' ? 'Романтические отношения' : 'Romantic relationship' },
+            { value: 'flirty', label: goalLabels.flirty, description: lang === 'ru' ? 'Игривое общение' : 'Playful chat' },
+            { value: 'friend', label: goalLabels.friend, description: lang === 'ru' ? 'Дружеское общение' : 'Friendly chat' },
+            { value: 'mentor', label: goalLabels.mentor, description: lang === 'ru' ? 'Наставничество и советы' : 'Mentorship & advice' },
+            { value: 'casual', label: goalLabels.casual, description: lang === 'ru' ? 'Просто поболтать' : 'Just casual talk' },
+          ]}
+          currentValue={settingsData.relationship_goal}
+          onSelect={(value) => {
+            updateMutation.mutate({ relationship_goal: value as any });
+          }}
+          onClose={() => setPickerType(null)}
+        />
+      )}
+
+      {pickerType === 'style' && (
+        <SettingsPicker
+          title={lang === 'ru' ? 'Личность' : 'Personality'}
+          options={[
+            { value: 'flirty', label: styleLabels.flirty, description: lang === 'ru' ? 'Игривая и веселая' : 'Playful and fun' },
+            { value: 'warm', label: styleLabels.warm, description: lang === 'ru' ? 'Тёплая и нежная' : 'Warm and caring' },
+            { value: 'intellectual', label: styleLabels.intellectual, description: lang === 'ru' ? 'Умная и вдумчивая' : 'Smart and thoughtful' },
+            { value: 'mix', label: styleLabels.mix, description: lang === 'ru' ? 'Смешанная' : 'Mixed personality' },
+          ]}
+          currentValue={settingsData.companion_style}
+          onSelect={(value) => {
+            updateMutation.mutate({ companion_style: value as any });
+          }}
+          onClose={() => setPickerType(null)}
+        />
+      )}
     </div>
   );
 }
