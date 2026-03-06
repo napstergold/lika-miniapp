@@ -32,10 +32,18 @@ function AppContent() {
       // Set initial language from Telegram
       const lang = user.language_code === 'ru' ? 'ru' : 'en';
       setSettings({ language: lang } as any);
+    } else if (isReady) {
+      // Development fallback: use a test user
+      console.warn('Telegram user not found, using fallback for testing');
+      // Try to get user from URL params (for testing)
+      const urlParams = new URLSearchParams(window.location.search);
+      const testId = urlParams.get('user_id') || '36078867'; // Default to Bogdan
+      setTelegramId(Number(testId));
+      setSettings({ language: 'en' } as any);
     }
-  }, [user, setTelegramId, setSettings]);
+  }, [user, isReady, setTelegramId, setSettings]);
 
-  if (!isReady || !user) {
+  if (!isReady) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
         <div className="text-gray-500">Loading...</div>

@@ -18,10 +18,20 @@ export function useTelegramWebApp() {
     WebApp.ready();
     WebApp.expand();
 
+    console.log('Telegram WebApp initialized:', {
+      platform: WebApp.platform,
+      version: WebApp.version,
+      initDataUnsafe: WebApp.initDataUnsafe,
+      user: WebApp.initDataUnsafe.user,
+    });
+
     // Get user data
     const initDataUnsafe = WebApp.initDataUnsafe;
     if (initDataUnsafe.user) {
       setUser(initDataUnsafe.user as TelegramUser);
+      console.log('User set:', initDataUnsafe.user);
+    } else {
+      console.warn('No user data from Telegram WebApp');
     }
 
     // Set theme
