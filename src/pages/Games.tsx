@@ -16,11 +16,17 @@ export function Games() {
 
   const handleGameClick = (_gameId: string) => {
     hapticFeedback('light');
-    showAlert(
-      lang === 'ru'
-        ? 'Игра откроется в чате с Lika! Используй /game'
-        : 'Game will open in Lika chat! Use /game'
-    );
+    // Open chat with pre-filled /game command
+    const webApp = (window as any).Telegram?.WebApp;
+    if (webApp) {
+      webApp.openTelegramLink('https://t.me/heylika_bot?text=/game');
+    } else {
+      showAlert(
+        lang === 'ru'
+          ? 'Игра откроется в чате с Lika! Используй /game'
+          : 'Game will open in Lika chat! Use /game'
+      );
+    }
   };
 
   if (isLoading || !games) {
