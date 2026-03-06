@@ -14,7 +14,7 @@ export function Games() {
     queryFn: () => apiClient.getGames(),
   });
 
-  const handleGameClick = (gameId: string) => {
+  const handleGameClick = (_gameId: string) => {
     hapticFeedback('light');
     showAlert(
       lang === 'ru'
