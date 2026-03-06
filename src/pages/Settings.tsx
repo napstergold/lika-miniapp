@@ -68,7 +68,8 @@ export function Settings() {
       label: lang === 'ru' ? 'Подписка' : 'Subscription',
       value: settingsData.tier === 'pro' ? (lang === 'ru' ? 'Pro ✨' : 'Pro ✨') : 'Free',
       onClick: () => {
-        // TODO: Open subscription modal
+        hapticFeedback('light');
+        alert(lang === 'ru' ? 'Скоро! Pro подписка откроет больше функций 🚀' : 'Coming soon! Pro subscription unlocks more features 🚀');
       },
     },
     {
@@ -77,7 +78,12 @@ export function Settings() {
       label: lang === 'ru' ? 'Пригласить друзей' : 'Invite Friends',
       value: '',
       onClick: () => {
-        // TODO: Share referral link
+        hapticFeedback('light');
+        const referralLink = `https://t.me/heylika_bot?start=ref_${telegramId}`;
+        const text = lang === 'ru' 
+          ? `Попробуй Lika — AI-подругу в Telegram! 💛\n${referralLink}`
+          : `Try Lika — AI companion in Telegram! 💛\n${referralLink}`;
+        window.open(`https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(text)}`, '_blank');
       },
     },
     {
@@ -86,7 +92,8 @@ export function Settings() {
       label: lang === 'ru' ? 'Чего ты ищешь' : 'What You Are Looking For',
       value: goalLabels[settingsData.relationship_goal],
       onClick: () => {
-        // TODO: Open goal picker modal
+        hapticFeedback('light');
+        alert(lang === 'ru' ? 'Используй команду /settings в боте для изменения' : 'Use /settings command in bot to change');
       },
     },
     {
@@ -95,7 +102,8 @@ export function Settings() {
       label: lang === 'ru' ? 'Личность' : 'Personality',
       value: styleLabels[settingsData.companion_style],
       onClick: () => {
-        // TODO: Open style picker modal
+        hapticFeedback('light');
+        alert(lang === 'ru' ? 'Используй команду /settings в боте для изменения' : 'Use /settings command in bot to change');
       },
     },
     {
@@ -104,7 +112,8 @@ export function Settings() {
       label: lang === 'ru' ? 'День рождения' : 'Birthday',
       value: settingsData.birthday || (lang === 'ru' ? 'Не указано' : 'Not set'),
       onClick: () => {
-        // TODO: Open date picker
+        hapticFeedback('light');
+        alert(lang === 'ru' ? 'Используй команду /settings в боте для изменения' : 'Use /settings command in bot to change');
       },
     },
     {
