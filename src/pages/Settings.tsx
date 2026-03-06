@@ -20,6 +20,7 @@ export function Settings() {
   const telegramId = useStore((state) => state.telegramId);
   const setSettings = useStore((state) => state.setSettings);
   const settings = useStore((state) => state.settings);
+  const stars = useStore((state) => state.stars);
   const { hapticFeedback } = useTelegramWebApp();
   const queryClient = useQueryClient();
 
@@ -83,10 +84,11 @@ export function Settings() {
       value: '',
       onClick: () => {
         hapticFeedback('light');
-        const referralLink = `https://t.me/heylika_bot?start=ref_${telegramId}`;
+        const referralCode = stars?.referrals?.code || telegramId.toString();
+        const referralLink = `https://t.me/heylika_bot?start=ref_${referralCode}`;
         const text = lang === 'ru' 
-          ? `Попробуй Lika — AI-подругу в Telegram! 💛\n${referralLink}`
-          : `Try Lika — AI companion in Telegram! 💛\n${referralLink}`;
+          ? `Попробуй Lika — AI-подругу в Telegram! 💛\n\n${referralLink}`
+          : `Try Lika — AI companion in Telegram! 💛\n\n${referralLink}`;
         window.open(`https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(text)}`, '_blank');
       },
     },

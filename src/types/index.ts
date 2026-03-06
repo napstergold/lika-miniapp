@@ -39,6 +39,7 @@ export interface Stars {
   referrals: {
     count: number;
     bonus_per_referral: number;
+    code: string;
   };
 }
 
