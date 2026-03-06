@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug - Lika Mini App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #0f0;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #0f0;
+        }
+        .error { color: #f00; }
+        .success { color: #0f0; }
+        pre {
+            background: #000;
+            padding: 10px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lika Mini App Debug</h1>
+    
+    <div class="section">
+        <h2>1. Telegram WebApp SDK</h2>
+        <div id="tg-status"></div>
+    </div>
+    
+    <div class="section">
+        <h2>2. User Data</h2>
+        <pre id="user-data"></pre>
+    </div>
+    
+    <div class="section">
+        <h2>3. API Connection</h2>
+        <div id="api-status"></div>
+        <pre id="api-response"></pre>
+    </div>
+
+    <script>
+        // 1. Check Telegram SDK
+        const tgStatus = document.getElementById('tg-status');
+        if (window.Telegram && window.Telegram.WebApp) {
+            const WebApp = window.Telegram.WebApp;
+            WebApp.ready();
+            WebApp.expand();
+            
+            tgStatus.innerHTML = `<span class="success">✓ Telegram WebApp SDK loaded</span><br>
+                Platform: ${WebApp.platform}<br>
+                Version: ${WebApp.version}<br>
+                Theme: ${WebApp.colorScheme}`;
+            
+            // 2. Check user data
+            const userData = document.getElementById('user-data');
+            if (WebApp.initDataUnsafe && WebApp.initDataUnsafe.user) {
+                const user = WebApp.initDataUnsafe.user;
+                userData.textContent = JSON.stringify(user, null, 2);
+                
+                // 3. Test API
+                const apiStatus = document.getElementById('api-status');
+                const apiResponse = document.getElementById('api-response');
+                
+                apiStatus.innerHTML = '<span>Testing API...</span>';
+                
+                fetch(`https://api.heylika.com/api/profile/${user.id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        apiStatus.innerHTML = '<span class="success">✓ API connected</span>';
+                        apiResponse.textContent = JSON.stringify(data, null, 2);
+                    })
+                    .catch(error => {
+                        apiStatus.innerHTML = `<span class="error">✗ API error: ${error.message}</span>`;
+                        apiResponse.textContent = error.stack;
+                    });
+            } else {
+                userData.innerHTML = '<span class="error">✗ No user data from Telegram</span><br>' +
+                    'initDataUnsafe: ' + JSON.stringify(WebApp.initDataUnsafe, null, 2);
+            }
+        } else {
+            tgStatus.innerHTML = '<span class="error">✗ Telegram WebApp SDK not loaded</span>';
+        }
+    </script>
+</body>
+</html>
