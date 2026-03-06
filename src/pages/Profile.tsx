@@ -38,9 +38,17 @@ export function Profile() {
     <div className="pb-20 px-4 pt-6 space-y-6">
       {/* Header */}
       <div className="text-center">
-        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 mx-auto mb-3 flex items-center justify-center text-white text-2xl font-bold">
-          {user.name[0].toUpperCase()}
-        </div>
+        {user.avatar ? (
+          <img
+            src={user.avatar}
+            alt={user.name}
+            className="w-20 h-20 rounded-full mx-auto mb-3 object-cover border-4 border-white dark:border-gray-800 shadow-lg"
+          />
+        ) : (
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 mx-auto mb-3 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+            {user.name[0].toUpperCase()}
+          </div>
+        )}
         <h1 className="text-2xl font-bold dark:text-white">{user.name}</h1>
       </div>
 
